@@ -52,7 +52,7 @@ const createteams = (req, res) => {
     });
   }
   const novoTime = {
-    id: esports.length,
+    id: esports.length+1,
     equipe: equipe,
     campeonato: campeonato,
     posição: parseInt(posição),
@@ -89,20 +89,6 @@ const deleteTeams = (req, res) => {
     message: `Seu time foi removido com sucesso`,
   });
 };
-
-const filtrarPorjogo = (req, res) => {
-  const jogo = req.query.jogo;
-  if (!jogo)
-    return res.status(400).json({
-      sucess: false,
-      message: "Deve se inserir um jogo valido",
-    });
-  const resultado = esports.filter((f) => f.jogo.includes(jogo));
-  return res.status(200).json({
-    sucess: true,
-    resultado:resultado,
-  });
-};
 const updateTimes = (req, res) => {
     const id = parseInt(req.params.id)
     const {
@@ -116,7 +102,6 @@ const updateTimes = (req, res) => {
         ativa,
       } =req.body
     const idParaEditar = id;
-    //garante que o id é um número//
     if(isNaN(idParaEditar)){
         return res.status(400).json({
             sucess:false,
@@ -127,7 +112,7 @@ const updateTimes = (req, res) => {
     if(!esportsExiste){
         return res.status(404).json({
             success: false,
-            message: `Nenhum esports com o id: ${id} não foi encontrada`
+            message: `Nenhum time com o id: ${id} não foi encontrada`
         })
     }
 const esportsAtualizados = esports.map(esports=> esports.id === idParaEditar?{
@@ -151,4 +136,46 @@ res.status(200).json({
     esports: esportsEditado
 })
 }
-export { getAllesports, getEsportsbyid, createteams, deleteTeams,filtrarPorjogo,updateTimes };
+
+//filtros//
+
+const filtrarPorjogo = (req, res) => {
+    const nome = req.params.nome.toLowerCase();
+    const resultado = esports.filter(f => f.jogo && f.jogo.toLowerCase() === nome);
+    res.json(resultado);
+  };
+const filtrarPorcampeonato = (req, res) => {
+    const nome = req.params.nome.toLowerCase();
+    const resultado = esports.filter(f => f.campeonato && f.campeonato.toLowerCase() === nome);
+    res.json(resultado);
+  };
+  
+  const getAtivo = (req,res) =>{
+    const ativa = esports.filter(a => a.ativa);
+    if (ativa) {
+        res.status(200).json(ativa);
+    } else {
+        res.status(404).json({
+            erro: `Nenhuma time ativo foi encontrado!`
+        });
+    }
+  }
+  const getInativo = (req,res) =>{
+    const ativa = esports.filter(a => a.ativa != true);
+    if (ativa) {
+        res.status(200).json(ativa);
+    } else {
+        res.status(404).json({
+            erro: `Nenhuma time inativo foi encontrado!`
+        });
+    }
+  }
+
+
+
+
+
+
+
+
+export { getAllesports, getEsportsbyid, createteams, deleteTeams,filtrarPorjogo,updateTimes,filtrarPorcampeonato, getAtivo, getInativo };

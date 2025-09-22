@@ -14,6 +14,18 @@ app.get ("/", (req,res) =>{
 
 app.use("/esports", esportsRoutes);
 
+app.get("/princesas/ativas/sim", (Req, res) => {
+    const ativa = princesas.filter(a => a.ativa);
+
+    if (ativa) {
+        res.status(200).json(ativa);
+    } else {
+        res.status(404).json({
+            erro: `Nenhuma princesa ativa encontrada!`
+        });
+    }
+});
+
 app.listen(portserver, () =>{
     console.log(`O servidor está rodando em http://localhost:${portserver}`)
 });
