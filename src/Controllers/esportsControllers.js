@@ -8,4 +8,61 @@ const getAllesports = (req, res) => {
     });
   };
 
-export {getAllesports}
+const getEsportsbyid = (req,res) => {
+    let id = req.params.id;
+    id = parseInt(id);
+
+    const esport = esports.find((e) => e.id === id);
+
+    if(!esport){
+        res.status(404).json({
+            sucess: false,
+            messsage: `Não existe um time com esse id ${id}`,
+          });
+    }
+    res.status(200).json({
+        total: esports.length,
+        esports: esport,
+      });
+    };
+
+    const createteams = (req,res) => {
+        const {equipe, jogo, jogadores, campeonato, posição, premiação, tecnico,  ativa} = req.body
+        if (!equipe || !jogo || !jogadores || !tecnico || !ativa || posição <= 0) {
+            return res.status(400).json({
+              sucess: false,
+              messsage: " Equipe, jogo, jogadores, tecnico, estar ativa e posição maior que 0 são obrigatorios",
+            });
+          }
+          if(posição <= 3 && premiação == 0 || premiação == null){
+            return res.status(400).json({
+                sucess: false,
+                messsage: "Se a equipe estiver no top 3 a premição deverá ser maior que 0",
+              });
+          }
+        const novoTime ={
+            id: esports.length,
+            equipe:equipe,
+            campeonato:campeonato,
+            posição:parseInt(posição),
+            premiação:parseInt(premiação),
+            tecnico:tecnico,
+            ativa:ativa
+        }
+        esports.push(novoTime);
+        res.status(201).json({
+            sucess: true,
+            messsage: "Seu Time foi adicionado com sucesso!",
+            time: novoTime,
+        });
+    }
+    const deleteTeams = (req,res) => {
+        
+    }
+
+
+
+
+
+
+export {getAllesports, getEsportsbyid,createteams}

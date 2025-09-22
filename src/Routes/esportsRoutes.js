@@ -1,8 +1,10 @@
 import express from "express";
-import { getAllesports } from "../Controllers/esportsControllers.js";
+import { createteams, getAllesports, getEsportsbyid } from "../Controllers/esportsControllers.js";
 
 const router = express.Router();
 
 router.get("/", getAllesports)
+router.get("/:id", getEsportsbyid)
+router.post("/", createteams)
 
 export default router
