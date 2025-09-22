@@ -56,13 +56,32 @@ const getEsportsbyid = (req,res) => {
             time: novoTime,
         });
     }
-    const deleteTeams = (req,res) => {
-        
-    }
+    const deleteTeams = (req, res) => {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({
+          sucess: false,
+          message: "O id deve ser valido",
+        });
+      }
+      const timeRemovido = esports.find((esport) => esport.id === id);
+      if (!timeRemovido) {
+        return res.status(404).json({
+          sucess: false,
+          message: `Time com o id ${id} não existe`,
+        });
+      }
+      const timeFiltrado = esports.filter((esports) => esports.id !== id);
+      esports.splice(0, esports.length, ...timeFiltrado);
+      return res.status(200).json({
+        sucess: true,
+        message: `Seu time foi removido com sucesso`,
+      });
+    };
 
 
 
 
 
 
-export {getAllesports, getEsportsbyid,createteams}
+export {getAllesports, getEsportsbyid,createteams, deleteTeams}
