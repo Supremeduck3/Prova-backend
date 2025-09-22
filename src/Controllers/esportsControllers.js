@@ -103,5 +103,52 @@ const filtrarPorjogo = (req, res) => {
     resultado:resultado,
   });
 };
-
-export { getAllesports, getEsportsbyid, createteams, deleteTeams,filtrarPorjogo };
+const updateTimes = (req, res) => {
+    const id = parseInt(req.params.id)
+    const {
+        equipe,
+        jogo,
+        jogadores,
+        campeonato,
+        posição,
+        premiação,
+        tecnico,
+        ativa,
+      } =req.body
+    const idParaEditar = id;
+    //garante que o id é um número//
+    if(isNaN(idParaEditar)){
+        return res.status(400).json({
+            sucess:false,
+            message:"O id deve ser um número"
+        })
+    }
+    const esportsExiste = esports.find( esports => esports.id === idParaEditar);
+    if(!esportsExiste){
+        return res.status(404).json({
+            success: false,
+            message: `Nenhum esports com o id: ${id} não foi encontrada`
+        })
+    }
+const esportsAtualizados = esports.map(esports=> esports.id === idParaEditar?{
+    ...esports,
+    ...(equipe && {equipe}),
+    ...(jogo && {jogo}),
+    ...(campeonato && {campeonato}),
+    ...(posição && {posição}),
+    ...(premiação && {premiação}),
+    ...(jogadores && {jogadores}),
+    ...(ativa && {ativa}),
+    ...(tecnico && {tecnico}),
+}
+:esports
+);
+esports.splice(0,esports.length, ...esportsAtualizados);
+const esportsEditado = esports.find(esports => esports.id === idParaEditar)
+res.status(200).json({
+    sucess: true,
+    message: "Os dados foram atualizados com sucesso",
+    esports: esportsEditado
+})
+}
+export { getAllesports, getEsportsbyid, createteams, deleteTeams,filtrarPorjogo,updateTimes };
