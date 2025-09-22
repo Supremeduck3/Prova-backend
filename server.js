@@ -15,5 +15,5 @@ app.get ("/", (req,res) =>{
 app.use("/esports", esportsRoutes);
 
 app.listen(portserver, () =>{
-    console.log(`O servidor está rodando em http:/localhost:${portserver}`)
+    console.log(`O servidor está rodando em http://localhost:${portserver}`)
 });
